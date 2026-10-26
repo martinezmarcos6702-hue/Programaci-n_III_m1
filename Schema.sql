@@ -1,0 +1,39 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS heroes (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    clase TEXT NOT NULL,
+    nivel_experiencia INTEGER NOT NULL CHECK (nivel_experiencia >= 1)
+);
+
+CREATE TABLE IF NOT EXISTS misiones (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    dificultad INTEGER NOT NULL CHECK (dificultad BETWEEN 1 AND 10),
+    localizacion TEXT NOT NULL,
+    recompensa INTEGER NOT NULL CHECK (recompensa >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS monstruos (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    tipo TEXT NOT NULL,
+    nivel_amenaza INTEGER NOT NULL CHECK (nivel_amenaza BETWEEN 1 AND 10)
+);
+
+CREATE TABLE IF NOT EXISTS misiones_heroes (
+    mision_id INTEGER NOT NULL,
+    heroe_id INTEGER NOT NULL,
+    PRIMARY KEY (mision_id, heroe_id),
+    FOREIGN KEY (mision_id) REFERENCES misiones(id) ON DELETE CASCADE,
+    FOREIGN KEY (heroe_id) REFERENCES heroes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS misiones_monstruos (
+    mision_id INTEGER NOT NULL,
+    monstruo_id INTEGER NOT NULL,
+    PRIMARY KEY (mision_id, monstruo_id),
+    FOREIGN KEY (mision_id) REFERENCES misiones(id) ON DELETE CASCADE,
+    FOREIGN KEY (monstruo_id) REFERENCES monstruos(id) ON DELETE CASCADE
+);
